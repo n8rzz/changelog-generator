@@ -1,0 +1,11 @@
+{
+    "authorEmail": "igw@internets.com",
+    "authorName": "Llyod Christmas",
+    "autoLinkIssue": true,
+    "changelogDir": "./changelog",
+    "compiledFilename": "CHANGELOG",
+    "entryType": ["bugfix", "hotfix", "feature", "documentation"],
+    "lastTag": "v1.2.3",
+    "originUrl": "",
+    "project name": "i-got-worms"
+}
