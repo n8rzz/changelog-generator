@@ -1,11 +1,16 @@
 {
-    "authorEmail": "igw@internets.com",
-    "authorName": "Llyod Christmas",
-    "autoLinkIssue": true,
-    "changelogDir": "./changelog",
-    "compiledFilename": "CHANGELOG",
-    "entryType": ["bugfix", "hotfix", "feature", "documentation"],
-    "lastTag": "v1.2.3",
-    "originUrl": "",
-    "project name": "i-got-worms"
+  "email": "teamtomkins23@gmail.com",
+  "name": "Nate Geslin",
+  "autoLinkIssue": true,
+  "entriesDir": "./changelog",
+  "entryType": [
+    "bugfix",
+    "hotfix",
+    "feature",
+    "documentation"
+  ],
+  "lastTag": "1.0.0",
+  "remoteUrl": "https://github.com/n8rzz/changelog-generator",
+  "outputFilename": "CHANGELOG",
+  "projectName": ""
 }

@@ -1,29 +1,32 @@
 const minimist = require('minimist');
 const hasArg = require('./lib/hasArg');
 const hasArgCommand = require('./lib/hasArgCommand');
-const cliHelp = require('./lib/cliHelp');
-const compileCommand = require('./lib/command/compile');
-const entryCommand = require('./lib/command/entry');
+const cli = require('./lib/cli/cli');
+const options = require('./lib/options/options');
+const command = require('./lib/command/command');
 const CommandEnum = require('./lib/types/command.enum');
 
-(function() {
+(async function() {
     const args = minimist(process.argv.slice(2));
 
     if (hasArg(args, 'h')) {
-        cliHelp(args);
+        cli.help(args);
 
-        process.exit();
+        return;
     }
 
-    // loadOptions
-    // !hasOptions -> generateDefaultOptionsFile
+    if (!options.hasStoredConfig()) {
+        await cli.initConfig();
+    }
+
+    const config = await options.load();
 
     if (hasArgCommand(args, CommandEnum.meta.map.entry) || hasArg(args, 'e')) {
-        entryCommand(args);
+        command.entry(args, config);
 
         return;
     } else if (hasArgCommand(args, CommandEnum.meta.map.compile) || hasArg(args, 'c')) {
-        compileCommand(args);
+        command.compile(args, config);
 
         return;
     }
