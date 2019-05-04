@@ -1,0 +1,15 @@
+{
+  "autoLinkIssue": true,
+  "defaultConfigFilename": ".changelog.json",
+  "entriesDir": "./changelog",
+  "entryType": [
+    "bugfix",
+    "hotfix",
+    "feature",
+    "documentation"
+  ],
+  "lastTag": "1.0.0",
+  "remoteUrl": "https://github.com/n8rzz/changelog-generator",
+  "outputFilename": "CHANGELOG",
+  "projectName": "tgbn"
+}

@@ -1,4 +1,5 @@
 const minimist = require('minimist');
+const chalk = require('chalk');
 const hasArg = require('./lib/hasArg');
 const hasArgCommand = require('./lib/hasArgCommand');
 const cli = require('./lib/cli/cli');
@@ -16,6 +17,8 @@ const CommandEnum = require('./lib/types/command.enum');
     }
 
     if (!options.hasStoredConfig()) {
+        console.log(chalk.grey('\nNo project configuration file found, generating default configuration...'));
+
         await cli.initConfig();
     }
 
