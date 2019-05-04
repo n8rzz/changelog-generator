@@ -1,0 +1,10 @@
+{
+  "author": "Nate Geslin",
+  "email": "teamtomkins23@gmail.com",
+  "date": "Wed, 08 May 2019 22:41:05 GMT",
+  "description": "a changelog entry description would go here",
+  "issue": "scm-4321",
+  "type": "bugfix",
+  "issueSourceUrl": "https://github.com/n8rzz/changelog-generator",
+  "skipFilenameCheck": false
+}

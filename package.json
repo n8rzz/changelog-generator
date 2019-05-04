@@ -7,10 +7,52 @@
   "bin": "./bin/changelog-generator.js",
   "author": "Nate Geslin, teamtomkins23@gmail.com",
   "license": "MIT",
+  "scripts": {
+    "clean:config": "rm .changelog.json",
+    "clean:entries": "rm -rf .changelog/",
+    "clean": "npm run clean:config && npm run clean:entries",
+    "start": "node ./index.js entry -i scm-4321 -d 'a changelog entry description would go here'",
+    "lint": "eslint ./lib",
+    "test": "nyc ava",
+    "posttest": "nyc report --reporter=cobertura --reporter=lcov --reporter=text-summary"
+  },
+  "ava": {
+    "files": [
+      "**/*spec.js",
+      "!**/__fixture__/**",
+      "!**/__mock__/**"
+    ],
+    "sources": [
+      "**/*.{js}",
+      "!bin"
+    ],
+    "concurrency": 5,
+    "failFast": true,
+    "failWithoutAssertions": false,
+    "verbose": true
+  },
+  "nyc": {
+    "all": true,
+    "exclude": [
+      "**/*spec.js",
+      "**/bin/**",
+      "**/coverage/**",
+      "**/__fixture__/**",
+      "**/__mock__/**"
+    ]
+  },
   "dependencies": {
     "chalk": "^2.4.2",
     "inquirer": "^6.3.1",
     "minimist": "^1.2.0",
     "tcomb": "^3.2.29"
+  },
+  "devDependencies": {
+    "ava": "^1.4.1",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "nyc": "^14.1.0",
+    "sinon": "^7.3.2"
   }
 }
