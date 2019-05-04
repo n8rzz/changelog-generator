@@ -1,7 +1,5 @@
 ﻿*~
 .DS_Store
-_atc-call-stack.js
-_site/
 coverage/
 .vs/
 .idea/
@@ -9,7 +7,4 @@ coverage/
 .nyc_output/
 node_modules/
 npm-debug.log.*
-public/
-assets/style/
-assets/scripts/
-yarn.lock
+.changelog.json
