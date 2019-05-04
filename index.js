@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const hasArg = require('./lib/hasArg');
 const hasArgCommand = require('./lib/hasArgCommand');
 const cli = require('./lib/cli/cli');
-const options = require('./lib/options/options');
+const options = require('./lib/config/config');
 const command = require('./lib/command/command');
 const CommandEnum = require('./lib/types/command.enum');
 
