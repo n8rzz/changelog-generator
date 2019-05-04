@@ -5,16 +5,12 @@
   "main": "index.js",
   "preferGlobal": true,
   "bin": "./bin/changelog-generator.js",
-  "scripts": {
-    "cgg": "node ./index.js"
-  },
   "author": "Nate Geslin, teamtomkins23@gmail.com",
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.2",
-    "lodash": "^4.17.11",
+    "inquirer": "^6.3.1",
     "minimist": "^1.2.0",
-    "ora": "^3.4.0",
     "tcomb": "^3.2.29"
   }
 }
