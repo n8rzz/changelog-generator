@@ -1,0 +1,10 @@
+{
+  "author": "Nate Geslin",
+  "email": "teamtomkins23@gmail.com",
+  "date": "Fri, 10 May 2019 00:30:44 GMT",
+  "description": "a major bugfix for things that were breaking badly, often",
+  "issue": "scm-3356",
+  "type": "bugfix",
+  "issueSourceUrl": "https://github.com/n8rzz/changelog-generator",
+  "skipFilenameCheck": false
+}

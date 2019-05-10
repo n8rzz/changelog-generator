@@ -1,0 +1,10 @@
+{
+  "author": "Nate Geslin",
+  "email": "teamtomkins23@gmail.com",
+  "date": "Fri, 10 May 2019 00:32:56 GMT",
+  "description": "this adds documenation.  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Turpis egestas pretium aenean pharetra magna ac placerat. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque. Eget mi proin sed libero. Cras adipiscing enim eu turpis egestas. Mattis aliquam faucibus purus in massa tempor nec. Neque laoreet suspendisse interdum consectetur libero id faucibus nisl. Quam id leo in vitae turpis massa. Lacus laoreet non curabitur gravida arcu ac tortor dignissim. Id velit ut tortor pretium viverra suspendisse potenti nullam.",
+  "issue": "scm-6599",
+  "type": "documentation",
+  "issueSourceUrl": "https://github.com/n8rzz/changelog-generator",
+  "skipFilenameCheck": false
+}

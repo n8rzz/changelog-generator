@@ -11,7 +11,8 @@
     "clean:config": "rm .changelog.json",
     "clean:entries": "rm -rf .changelog/",
     "clean": "npm run clean:config && npm run clean:entries",
-    "start": "node ./index.js entry -i scm-4321 -d 'a changelog entry description would go here'",
+    "entry": "node ./index.js entry -i scm-4321 -d 'a changelog entry description would go here'",
+    "compile": "node ./index.js compile --version 4.2.3 -d",
     "lint": "eslint ./lib",
     "test": "nyc ava",
     "posttest": "nyc report --reporter=cobertura --reporter=lcov --reporter=text-summary"

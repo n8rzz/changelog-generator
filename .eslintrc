@@ -15,7 +15,7 @@
   "rules": {
     "arrow-parens": ["error", "always"],
     "indent": ["warn", 4],
-    "max-len": ["error", 120],
+    "max-len": ["error", 160],
     "no-console": "off",
     "no-param-reassign": ["error", { "ignorePropertyModificationsFor": ["reduce"]}],
     "no-underscore-dangle": "off"
