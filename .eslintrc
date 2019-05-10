@@ -9,15 +9,35 @@
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
-  "parserOptions": {
-    "ecmaVersion": 2018
+  "parser": "@typescript-eslint/parser",
+  "parserOptions":  {
+    "ecmaVersion":  2018,
+    "sourceType":  "module"
   },
+  "plugins": [
+    "eslint-plugin-import",
+    "@typescript-eslint"
+  ],
   "rules": {
+    "arrow-body-style": ["error", "always"],
     "arrow-parens": ["error", "always"],
+    "import/prefer-default-export": "off",
     "indent": ["warn", 4],
-    "max-len": ["error", 120],
+    "lines-between-class-members": "off",
+    "max-len": ["error", { "code": 120, "ignoreTemplateLiterals": true, "ignoreComments": true }],
     "no-console": "off",
-    "no-param-reassign": ["error", { "ignorePropertyModificationsFor": ["reduce"]}],
-    "no-underscore-dangle": "off"
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.spec.ts"] }],
+    "no-param-reassign": ["error", { "ignorePropertyModificationsFor": ["reduce"] }],
+    "no-underscore-dangle": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
   }
 }

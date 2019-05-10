@@ -1,0 +1,12 @@
+{
+    "extends": "@istanbuljs/nyc-config-typescript",
+
+    "extension": [
+        ".ts"
+    ],
+    "exclude": [
+        "**/__fixture__/**",
+        "**/__mock__/**",
+        "**/__test__/**"
+    ]
+}
