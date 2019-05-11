@@ -10,10 +10,12 @@
   "scripts": {
     "clean:config": "rm .changelog.json",
     "clean:entries": "rm -rf .changelog/",
-    "clean": "npm run clean:config && npm run clean:entries",
+    "clean:test": "npm run clean:config && npm run clean:entries",
+    "clean:lib": "rm -rf lib/",
     "cmd:entry:help": "node ./index.js entry -h",
     "cmd:entry:empty": "node ./index.js entry",
     "cmd:entry": "node ./index.js entry -i scm-4321 -d 'a changelog entry description would go here'",
+    "cmd:entry:force": "node ./index.js entry -i scm-4321 -d 'a changelog entry description would go here -f'",
     "e2e": "sh ./e2e.sh",
     "help": "node ./index.js -h",
     "build": "tsc",
