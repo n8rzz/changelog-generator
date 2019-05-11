@@ -7,4 +7,5 @@ export enum CommandEnum {
     Init = 'init',
     Entry = 'entry',
     Compile = 'compile',
+    Generate = 'generate',
 }

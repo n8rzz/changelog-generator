@@ -1,13 +1,5 @@
-export interface IConfigModel {
-    autoLinkIssue: boolean;
-    defaultConfigFilename: string;
-    entriesDir: string;
-    entryType: string[];
-    lastTag: string;
-    issueSourceUrl?: string;
-    outputFilename: string;
-    projectName: string;
-}
+import { IConfig } from './i-config';
+
 
 /**
  * Defines the shape of what we look for in the
@@ -15,7 +7,7 @@ export interface IConfigModel {
  *
  * @class ConfigModel
  */
-export default class ConfigModel implements IConfigModel {
+export default class ConfigModel implements IConfig {
     public autoLinkIssue: boolean = false;
     public defaultConfigFilename: string = '';
     public entriesDir: string = '';
@@ -25,7 +17,7 @@ export default class ConfigModel implements IConfigModel {
     public outputFilename: string = '';
     public projectName: string = '';
 
-    constructor(configProps: IConfigModel) {
+    constructor(configProps: IConfig) {
         this.autoLinkIssue = configProps.autoLinkIssue;
         this.defaultConfigFilename = configProps.defaultConfigFilename;
         this.entriesDir = configProps.entriesDir;

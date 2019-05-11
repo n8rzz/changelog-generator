@@ -1,6 +1,6 @@
-import { IConfigModel } from '../types/config.model';
+import { IConfig } from '../types/i-config';
 
-export const validConfigModelMock: IConfigModel = {
+export const validConfigModelMock: IConfig = {
     autoLinkIssue: true,
     defaultConfigFilename: '.changelog.json',
     entriesDir: './changelog',

@@ -37,9 +37,9 @@ export default class CliCommandModel implements ICliCommand {
      */
     public extractArgValueByCommandOrAlias(args: Partial<minimist.ParsedArgs>): string|null {
         const hasArgument = hasArg(args, this.arg);
-        const hasARgumentAlias = hasArg(args, this.alias);
+        const hasArgumentAlias = hasArg(args, this.alias);
 
-        if (!hasArgument && !hasARgumentAlias) {
+        if (!hasArgument && !hasArgumentAlias) {
             return null;
         }
 

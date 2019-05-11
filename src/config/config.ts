@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import ConfigModel, { IConfigModel } from '../types/config.model';
+import ConfigModel from '../types/config.model';
+import { IConfig } from '../types/i-config';
 
 /**
  * @private
@@ -67,7 +68,7 @@ export function createChangelogEntriesDir(): void {
 
 /**
  * @function loadSavedConfig
- * @returns {IConfigModel|undefined}
+ * @returns {IConfig|undefined}
  */
 export function loadSavedConfig(): ConfigModel|null {
     if (!_hasStoredConfigAtDefaultPath()) {
@@ -75,7 +76,7 @@ export function loadSavedConfig(): ConfigModel|null {
     }
 
     const configDataFromFile: string = fs.readFileSync('.changelog.json', 'utf-8');
-    const configProps: IConfigModel = JSON.parse(configDataFromFile);
+    const configProps: IConfig = JSON.parse(configDataFromFile);
 
     return new ConfigModel(configProps);
 }

@@ -1,7 +1,5 @@
 import minimist from 'minimist';
-import { cliHelp } from './cli/help';
-import { initChangelogDir } from './cli/initChangelogDir';
-import { initConfig } from './cli/initConfig';
+import CliController from './cli/cli.controller';
 import {
     hasStoredConfig,
     load,
@@ -16,14 +14,14 @@ import { CommandEnum } from './types/command.enum';
     const args: minimist.ParsedArgs = minimist(process.argv.slice(2));
 
     if (hasArg(args, 'h')) {
-        cliHelp(args);
+        CliController.help(args);
 
         return;
     }
 
     if (!hasStoredConfig()) {
-        await initConfig();
-        initChangelogDir();
+        await CliController.initializeConfigFile();
+        CliController.initializeChangelogDirectory();
     }
 
     const storedConfig = await load();
