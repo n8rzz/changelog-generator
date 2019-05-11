@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import minimist from 'minimist';
-import { hasArgCommand } from '../hasArgCommand';
-import { CommandEnum } from '../types/command.enum';
+import { hasArgCommand } from '../../hasArgCommand';
+import { CommandEnum } from '../../types/command.enum';
 
 const basicUsage: string = `
     Usage:
@@ -64,31 +64,34 @@ const compileUsage: string = `
         --append        if filename exists, will attempt to append to existing file
 `;
 
-/**
- * Display the appropriate help documentation
- *
- * We should be here as a result of a `-h` argument
- *
- * TODO: move command-specific help to command dirs
- * instead of doing it inline here, it could be something
- * like: `command.entry.help()`, etc
- *
- * @function cliHelp
- * @param args {object}
- * @returns {void}
- */
-export function cliHelp(args: minimist.ParsedArgs): void {
-    if (hasArgCommand(args, CommandEnum.Entry)) {
-        console.log(`${chalk.grey(entryUsage)}`);
+export default class HelpCommand {
+    /**
+     * Display the appropriate help documentation
+     *
+     * We should be here as a result of a `-h` argument
+     *
+     * TODO: move command-specific help to command dirs
+     * instead of doing it inline here, it could be something
+     * like: `command.entry.help()`, etc
+     *
+     * @function cliHelp
+     * @param args {object}
+     * @returns {void}
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static execute(args: minimist.ParsedArgs): void {
+        if (hasArgCommand(args, CommandEnum.Entry)) {
+            console.log(`${chalk.grey(entryUsage)}`);
 
-        return;
+            return;
+        }
+
+        if (hasArgCommand(args, CommandEnum.Compile)) {
+            console.log(`${chalk.grey(compileUsage)}`);
+
+            return;
+        }
+
+        console.log(`${chalk.grey(basicUsage)}`);
     }
-
-    if (hasArgCommand(args, CommandEnum.Compile)) {
-        console.log(`${chalk.grey(compileUsage)}`);
-
-        return;
-    }
-
-    console.log(`${chalk.grey(basicUsage)}`);
 }

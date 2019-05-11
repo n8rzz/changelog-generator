@@ -1,6 +1,5 @@
 import { IConfig } from './i-config';
 
-
 /**
  * Defines the shape of what we look for in the
  * configuration file.

@@ -2,16 +2,12 @@ import test from 'ava';
 import sinon from 'sinon';
 import minimist from 'minimist';
 import EntryModel from '../entry.model';
-import EntryCommand from '../entry';
-import { validEntryCommandWithArgsMock } from '../../../__mock__/minimist-args.mock';
+import EntryCommand from '../entry-command';
+import {
+    validEntryCommandWithArgsMock,
+} from '../../../__mock__/minimist-args.mock';
 import { entryModelFixture } from '../../../__fixture__/entry-model.fixture';
 import { configModelFixture } from '../../../__fixture__/config-model.fixture';
-
-const cliArgMock: minimist.ParsedArgs = {
-    _: ['entry'],
-    i: 'scm-4321',
-    d: 'a changelog entry description would go here',
-};
 
 test('.entryCommand()', (t) => {
     t.notThrows(() => {
@@ -24,7 +20,9 @@ test('.extractEntryValuesFromCliArgs()', (t) => {
         description: 'a changelog entry description would go here',
         issue: 'scm-4321',
     };
-    const result: Partial<EntryModel> = EntryCommand.extractEntryValuesFromCliArgs(cliArgMock);
+    const result: Partial<EntryModel> = EntryCommand.extractEntryValuesFromCliArgs(
+        validEntryCommandWithArgsMock as minimist.ParsedArgs,
+    );
 
     t.deepEqual(result, expectedResult);
 });

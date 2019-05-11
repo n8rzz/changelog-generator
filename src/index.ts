@@ -1,20 +1,20 @@
 import minimist from 'minimist';
 import CliController from './cli/cli.controller';
+import HelpCommand from './command/help/help-command';
 import {
     hasStoredConfig,
     load,
 } from './config/config';
-import EntryCommand from './command/entry/entry';
 import { hasArg } from './hasArg';
-import { hasArgCommand } from './hasArgCommand';
-import { CommandEnum } from './types/command.enum';
 
 /* eslint-disable */
 (async function(): Promise<void> {
     const args: minimist.ParsedArgs = minimist(process.argv.slice(2));
 
+    // we short circuit he process here so we can presetn help
+    // to the user before having to load or eval any files
     if (hasArg(args, 'h')) {
-        CliController.help(args);
+        HelpCommand.execute(args);
 
         return;
     }
@@ -28,13 +28,5 @@ import { CommandEnum } from './types/command.enum';
 
     console.log('\n================================================================================\n\n');
 
-    if (hasArgCommand(args, CommandEnum.Entry) || hasArg(args, 'e')) {
-        EntryCommand.execute(args, storedConfig);
-
-        return;
-    } else if (hasArgCommand(args, CommandEnum.Compile) || hasArg(args, 'c')) {
-        // command.compile(args, storedConfig);
-
-        return;
-    }
+    CliController.execute(args, storedConfig);
 })();

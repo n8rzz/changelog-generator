@@ -19,24 +19,30 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "@typescript-eslint/no-unused-vars": "warn",
     "arrow-body-style": ["error", "always"],
     "arrow-parens": ["error", "always"],
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.spec.ts"] }],
     "import/prefer-default-export": "off",
     "indent": ["warn", 4],
     "lines-between-class-members": "off",
     "max-len": ["error", { "code": 120, "ignoreTemplateLiterals": true, "ignoreComments": true }],
     "no-console": "off",
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.spec.ts"] }],
+    "no-else-return": ["error", { "allowElseIf": true }],
     "no-param-reassign": ["error", { "ignorePropertyModificationsFor": ["reduce"] }],
     "no-underscore-dangle": "off",
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "warn"
+    "no-unused-vars": "off"
   },
   "settings": {
     "import/resolver": {
       "node": {
         "paths": ["src"],
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+        "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+        ]
       }
     }
   }

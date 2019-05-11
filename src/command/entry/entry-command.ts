@@ -187,7 +187,7 @@ export default class EntryCommand {
             return;
         }
 
-        console.log(chalk.yellow(`* Similar filename found in entries directory. Generating new file anyway since ${chalk.white('-f')} flag was passed`));
+        console.log(chalk.yellow(`\n* Similar filename found in entries directory. Generating new file anyway since ${chalk.white('-f')} flag was passed`));
     }
 
     /**

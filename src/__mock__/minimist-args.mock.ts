@@ -9,7 +9,7 @@ export const validEntryCommandWithHelpMock: Partial<minimist.ParsedArgs> = {
     h: true,
 };
 
-export const validEntryCommandWithArgsMock: Partial<minimist.ParsedArgs> = {
+export const validEntryCommandWithArgsMock: minimist.ParsedArgs = {
     _: ['entry'],
     i: 'scm-4321',
     d: 'a changelog entry description would go here',
