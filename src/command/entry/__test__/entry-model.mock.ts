@@ -1,4 +1,4 @@
-import { IEntryModel } from '../types/entry.model';
+import { IEntryModel } from '../entry.model';
 
 export const minimalEntryModelMock: IEntryModel = {
     author: 'Steve Perry',

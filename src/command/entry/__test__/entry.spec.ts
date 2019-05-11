@@ -1,7 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
 import minimist from 'minimist';
-import EntryModel from '../../../types/entry.model';
+import EntryModel from '../entry.model';
 import EntryCommand from '../entry';
 import { validEntryCommandWithArgsMock } from '../../../__mock__/minimist-args.mock';
 import { entryModelFixture } from '../../../__fixture__/entry-model.fixture';

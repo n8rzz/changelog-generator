@@ -5,7 +5,7 @@ import minimist from 'minimist';
 import path from 'path';
 import CliCommandModel from '../../types/cli-arg.model';
 import ConfigModel from '../../types/config.model';
-import EntryModel from '../../types/entry.model';
+import EntryModel from './entry.model';
 import { execWithDefaultAndErrorMsg } from '../../execWithDefaultAndErrorMsg';
 import { textInputValidator } from '../../validator/text-input.validator';
 import { ENTRY_CLI_COMMAND_MAP } from './cli-command-map';

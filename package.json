@@ -20,7 +20,7 @@
     "help": "node ./index.js -h",
     "build": "tsc",
     "prestart": "npm run build",
-    "lint": "eslint ./src",
+    "lint": "eslint ./src/**/*.ts",
     "test": "tsc && nyc ava",
     "posttest": "nyc report --reporter=cobertura --reporter=lcov --reporter=text-summary"
   },
@@ -34,6 +34,8 @@
     "failWithoutAssertions": false,
     "files": [
       "**/__test__/**/*spec.ts",
+      "!**/*mock.ts",
+      "!**/*fixture.ts",
       "!**/__fixture__/**",
       "!**/__mock__/**"
     ],

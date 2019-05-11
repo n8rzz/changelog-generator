@@ -15,7 +15,6 @@ import { CommandEnum } from './types/command.enum';
 (async function(): Promise<void> {
     const args: minimist.ParsedArgs = minimist(process.argv.slice(2));
 
-
     if (hasArg(args, 'h')) {
         cliHelp(args);
 
