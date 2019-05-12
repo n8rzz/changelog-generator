@@ -3,7 +3,6 @@
 coverage/
 .vs/
 .idea/
-.vscode
 .nyc_output/
 lib/
 node_modules/

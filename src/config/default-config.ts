@@ -1,6 +1,7 @@
 import ConfigModel from '../types/config.model';
+import { IConfig } from '../types/i-config';
 
-const defaultConfigProps = {
+const defaultConfigProps: IConfig = {
     autoLinkIssue: true,
     defaultConfigFilename: '.changelog.json',
     entriesDir: '.changelog',

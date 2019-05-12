@@ -1,10 +1,10 @@
 import chalk from 'chalk';
 import inquirer, { prompt } from 'inquirer';
-import ConfigModel from '../types/config.model';
-import { execWithDefaultAndErrorMsg } from '../execWithDefaultAndErrorMsg';
-import { textInputValidator } from '../validator/text-input.validator';
-import { writeConfig } from '../config/config';
-import { defaultConfig } from '../config/default-config';
+import ConfigModel from '../../types/config.model';
+import { execWithDefaultAndErrorMsg } from '../../execWithDefaultAndErrorMsg';
+import { textInputValidator } from '../../validator/text-input.validator';
+import { writeConfig } from '../../config/config';
+import { defaultConfig } from '../../config/default-config';
 
 /**
  * Ask `git` for the current tag, or use an empty string
@@ -111,7 +111,9 @@ export function _promptInitQuestions(configWithSystemValues: ConfigModel): Promi
     ];
 
     return prompt(questions)
-        .then((answers: inquirer.Answers) => _finishInitWithUserAnswers(answers, configWithSystemValues));
+        .then((answers: inquirer.Answers) => {
+            return _finishInitWithUserAnswers(answers, configWithSystemValues);
+        });
 }
 
 /**
