@@ -1,7 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import ConfigModel from '../types/config.model';
+import { defaultConfig } from './default-config';
 import { IConfig } from '../types/i-config';
+
+/**
+ *
+ * FIXME: this should be moved to a singleton or some other class
+ *
+ */
 
 /**
  * @private
@@ -9,7 +16,7 @@ import { IConfig } from '../types/i-config';
  * @returns {booelan}
  */
 export function _hasStoredConfigAtDefaultPath(): boolean {
-    return fs.existsSync('.changelog.json');
+    return fs.existsSync(defaultConfig.defaultConfigFilename);
 }
 
 /**
@@ -22,7 +29,7 @@ export function _hasStoredConfigAtDefaultPath(): boolean {
  * @returns {void}
  */
 export function writeConfig(config: ConfigModel): void {
-    fs.writeFileSync('.changelog.json', config.toJson());
+    fs.writeFileSync(config.defaultConfigFilename, config.toJson());
 }
 
 /**
@@ -30,15 +37,14 @@ export function writeConfig(config: ConfigModel): void {
  * @returns {boolean}
  */
 export function hasChangelogDir(): boolean {
-    // TODO: use configuration for `dir`
     let hasEntriesDir: boolean = false;
 
     try {
-        const stats: fs.Stats = fs.statSync(path.join(process.cwd(), '.changelog'));
+        const stats: fs.Stats = fs.statSync(path.join(process.cwd(), defaultConfig.entriesDir));
 
         if (!stats.isDirectory()) {
-            // using `throw` here to move to the `catch`, this
-            // error is ignored within the `catch`
+            // using `throw` here to force call to the `catch`,
+            // this error is ignored within the `catch`
             throw new Error('Did not find changelog entries directory');
         }
 
@@ -58,15 +64,6 @@ export function hasStoredConfig(): boolean {
 }
 
 /**
- * @function createChangelogEntriesDir
- * @returns {void}
- */
-export function createChangelogEntriesDir(): void {
-    // TODO: use config value
-    fs.mkdirSync(path.join(process.cwd(), '.changelog'));
-}
-
-/**
  * @function loadSavedConfig
  * @returns {IConfig|undefined}
  */
@@ -75,7 +72,7 @@ export function loadSavedConfig(): ConfigModel|null {
         return null;
     }
 
-    const configDataFromFile: string = fs.readFileSync('.changelog.json', 'utf-8');
+    const configDataFromFile: string = fs.readFileSync(defaultConfig.defaultConfigFilename, 'utf-8');
     const configProps: IConfig = JSON.parse(configDataFromFile);
 
     return new ConfigModel(configProps);

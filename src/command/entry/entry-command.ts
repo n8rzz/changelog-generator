@@ -72,16 +72,16 @@ export default class EntryCommand {
      * Will grab a value based on either argument or alias
      *
      * @method extractEntryValuesFromCliArgs
-     * @param {minimist.ParsedArgs} cliArgs
+     * @param {minimist.ParsedArgs} args
      * @returns {object}
      */
-    public static extractEntryValuesFromCliArgs(cliArgs: minimist.ParsedArgs): Partial<EntryModel> {
+    public static extractEntryValuesFromCliArgs(args: minimist.ParsedArgs): Partial<EntryModel> {
         return Object.keys(ENTRY_CLI_COMMAND_MAP).reduce((
             sum: {[key: string]: string},
             cliOptionName: string,
         ): {[key: string]: string} => {
             const cliOption: CliCommandModel = ENTRY_CLI_COMMAND_MAP[cliOptionName];
-            const argValue: string = cliOption.extractArgValueByCommandOrAlias(cliArgs) as string;
+            const argValue: string = cliOption.extractArgValueByCommandOrAlias(args) as string;
 
             if (argValue != null) {
                 sum[cliOptionName] = argValue;
