@@ -32,6 +32,8 @@ run_help_commands () {
     node ./index.js init -h &&
     # should show help for entry command
     node ./index.js entry -h
+    # should show help for generate command
+    node ./index.js generate -h
 }
 
 # =====================

@@ -2,7 +2,6 @@ import minimist from 'minimist';
 import ConfigModel from '../types/config.model';
 import { CommandContructorMap } from './command-constructor-map';
 import { hasArgCommand } from '../hasArgCommand';
-import { hasArg } from '../hasArg';
 import { CommandEnum } from '../types/command.enum';
 
 export default class CliController {
@@ -13,9 +12,9 @@ export default class CliController {
     }
 
     private static _findCommandByNameOrAlias(args: minimist.ParsedArgs): CommandEnum {
-        if (hasArgCommand(args, CommandEnum.Compile) || hasArg(args, 'c')) {
-            return CommandEnum.Compile;
-        } else if (hasArgCommand(args, CommandEnum.Entry) || hasArg(args, 'e')) {
+        if (hasArgCommand(args, CommandEnum.Generate)) {
+            return CommandEnum.Generate;
+        } else if (hasArgCommand(args, CommandEnum.Entry)) {
             return CommandEnum.Entry;
         } else if (hasArgCommand(args, CommandEnum.Init)) {
             return CommandEnum.Init;

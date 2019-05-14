@@ -12,8 +12,8 @@ const basicUsage: string = `
         $ changelog-generator entry -i bug-234 -d "This is an entry description"
 
     Commands:
-        compile     compile entires into new a changelog for release
         entry       create a changelog entry for current release
+        generate    generate a changelog for release from existing entires
         init        create configuration file and entries directory
 
         Each command provides support for the help option:
@@ -23,20 +23,19 @@ const basicUsage: string = `
         -h          help
 `;
 
-const compileUsage: string = `
+const generateCommandUsage: string = `
     Usage:
-        ${chalk.white('$ changelog-generator compile <options>')}
+        ${chalk.white('$ changelog-generator generate <options>')}
 
     Example:
-        $ changelog-generator compile
+        $ changelog-generator generate
 
     Options:
         -h              help
         --version       next release version
-        --filename      name of resulting file, defaults to \`CHANGELOG\`
         --append        if filename exists, will attempt to append to existing file
 `;
-const entryUsage: string = `
+const entryCommandUsage: string = `
     Usage:
         ${chalk.white('$ changelog-generator entry <options>')}
 
@@ -45,6 +44,7 @@ const entryUsage: string = `
         $ changelog-generator entry -d "this is an entry description"
 
     Options:
+        -h                          help
         -a, --author                author of work, will default to \`git\` user name
         -d, --description           description of changes, should be encolsed with double quotes
         -e, --email                 author email address, will default to \`git\` user email
@@ -64,7 +64,7 @@ const entryUsage: string = `
         Will produce a json file in the \`.changelog\` (default) directory, or whatever you have
         defined as the \`entiresDir\` from the configuration file
         `;
-const initUsage: string = `
+const initCommandUsage: string = `
     Usage:
         ${chalk.white('$ changelog-generator init <options>')}
 
@@ -77,7 +77,7 @@ const initUsage: string = `
         -p, --projectName           name of your project
 
     Description:
-        -- TODO --
+        Initializes configuration file and entries directory. Should be run only once during initial setup
         `;
 
 export default class HelpCommand {
@@ -96,20 +96,20 @@ export default class HelpCommand {
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public static execute(args: minimist.ParsedArgs): void {
-        if (hasArgCommand(args, CommandEnum.Compile)) {
-            console.log(`${chalk.grey(compileUsage)}`);
+        if (hasArgCommand(args, CommandEnum.Entry)) {
+            console.log(`${chalk.grey(entryCommandUsage)}`);
 
             return;
         }
 
-        if (hasArgCommand(args, CommandEnum.Entry)) {
-            console.log(`${chalk.grey(entryUsage)}`);
+        if (hasArgCommand(args, CommandEnum.Generate)) {
+            console.log(`${chalk.grey(generateCommandUsage)}`);
 
             return;
         }
 
         if (hasArgCommand(args, CommandEnum.Init)) {
-            console.log(`${chalk.grey(initUsage)}`);
+            console.log(`${chalk.grey(initCommandUsage)}`);
 
             return;
         }

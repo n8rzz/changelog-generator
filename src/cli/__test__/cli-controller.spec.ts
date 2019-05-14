@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import minimist from 'minimist';
 import CliController from '../cli.controller';
 import EntryCommand from '../../command/entry/entry-command';
+import GenerateCommand from '../../command/generate/generate-command';
 import HelpCommand from '../../command/help/help-command';
 import InitCommand from '../../command/init/init-command';
 import { configModelFixture } from '../../__fixture__/config-model.fixture';
@@ -12,6 +13,22 @@ test('CliController.execute() calls EntryCommand.execute() when entry command is
         _: ['entry'],
     };
     const executeStub: sinon.SinonSpy = sinon.spy(EntryCommand, 'execute');
+
+    CliController.execute(
+        argsMock,
+        configModelFixture,
+    );
+
+    t.is(executeStub.calledWithExactly(argsMock, configModelFixture), true);
+
+    executeStub.restore();
+});
+
+test('CliController.execute() calls GenerateCommand.execute() when entry command is passed as an arg', (t) => {
+    const argsMock: minimist.ParsedArgs = {
+        _: ['generate'],
+    };
+    const executeStub: sinon.SinonSpy = sinon.spy(GenerateCommand, 'execute');
 
     CliController.execute(
         argsMock,

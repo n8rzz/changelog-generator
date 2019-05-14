@@ -16,6 +16,8 @@
     "cmd:entry:empty": "node ./index.js entry",
     "cmd:entry": "node ./index.js entry -i scm-4321 -d \"a changelog entry description would go here\"",
     "cmd:entry:force": "node ./index.js entry -i scm-4321 -d 'a changelog entry description would go here' -f",
+    "cmd:generate:help": "node ./index.js generate -h",
+    "cmd:generate": "node ./index.js generate --version 3.2.1-0",
     "cmd:help": "node ./index.js -h",
     "cmd:init:help": "node ./index.js init -h",
     "cmd:init:empty": "node ./index.js init",
