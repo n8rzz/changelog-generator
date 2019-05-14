@@ -44,6 +44,10 @@ export default class EntryModel implements IEntryModel {
         return this.author.split(' ').join('-');
     }
 
+    public buildCheckboxLabel(): string {
+        return `${this.issue} - ${this.author}`;
+    }
+
     public generateFileName(): string {
         const nowInSeconds: number = new Date(this.date).getTime();
 

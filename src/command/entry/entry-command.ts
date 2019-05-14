@@ -66,6 +66,7 @@ export default class EntryCommand {
         });
     }
 
+    // TODO: extract this out to a utility
     /**
      * Pulls values passed from `cliArgs`
      *
