@@ -24,7 +24,7 @@ test('CliController.execute() calls EntryCommand.execute() when entry command is
     executeStub.restore();
 });
 
-test('CliController.execute() calls GenerateCommand.execute() when entry command is passed as an arg', (t) => {
+test('CliController.execute() calls GenerateCommand.execute() when generate command is passed as an arg', (t) => {
     const argsMock: minimist.ParsedArgs = {
         _: ['generate'],
     };
@@ -40,7 +40,7 @@ test('CliController.execute() calls GenerateCommand.execute() when entry command
     executeStub.restore();
 });
 
-test('CliController.execute() calls HelpCommand.execute() when entry command is passed as an arg', (t) => {
+test('CliController.execute() calls HelpCommand.execute() when help command is passed as an arg', (t) => {
     const argsMock: minimist.ParsedArgs = {
         _: ['help'],
     };
@@ -56,7 +56,7 @@ test('CliController.execute() calls HelpCommand.execute() when entry command is 
     executeStub.restore();
 });
 
-test('CliController.execute() calls InitCommand.execute() when entry command is passed as an arg', (t) => {
+test('CliController.execute() calls InitCommand.execute() when init command is passed as an arg', (t) => {
     const argsMock: minimist.ParsedArgs = {
         _: ['init'],
     };

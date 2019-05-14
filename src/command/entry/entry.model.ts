@@ -7,6 +7,7 @@ export interface IEntryModel {
     issue?: string;
     type?: string;
     issueSourceUrl: string;
+    name?: string;
 }
 
 /**
@@ -21,6 +22,7 @@ export default class EntryModel implements IEntryModel {
     public issue: string = '';
     public type: string = '';
     public issueSourceUrl: string = '';
+    public name: string = '';
 
     constructor(props: IEntryModel) {
         this.date = props.date;
@@ -31,6 +33,7 @@ export default class EntryModel implements IEntryModel {
         this.issue = props.issue || '';
         this.type = props.type || '';
         this.issueSourceUrl = props.issueSourceUrl || '';
+        this.name = props.name || '';
     }
 
     public authorNameWithoutSpaces(): string {

@@ -10,9 +10,7 @@
           "name": "node",
           "program": "${workspaceFolder}/index.js",
           "args": [
-              "entry",
-              "-i",
-              "11234"
+              "generate"
           ]
         },
         {

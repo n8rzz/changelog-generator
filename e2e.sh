@@ -57,5 +57,8 @@ npm run cmd:entry &&
 # should create entry using same cli arg values an -f
 npm run cmd:entry:force &&
 
+npm run cmd:generate:empty &&
+npm run cmd:generate &&
+
 # run unit tests
 npm run test
