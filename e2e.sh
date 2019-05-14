@@ -26,13 +26,25 @@ run_help_commands () {
     echo ""
     echo "${YELLOW} Testing help command outputs...${RESET_COLOR}"
     echo ""
-    # should display root help doc
+
+    echo ""
+    echo "${YELLOW} should display root help doc${RESET_COLOR}"
+    echo ""
     node ./index.js -h &&
-    # should show help for init command
+
+    echo ""
+    echo "${YELLOW} should show help for init command${RESET_COLOR}"
+    echo ""
     node ./index.js init -h &&
-    # should show help for entry command
+
+    echo ""
+    echo "${YELLOW} should show help for entry command${RESET_COLOR}"
+    echo ""
     node ./index.js entry -h
-    # should show help for generate command
+
+    echo ""
+    echo "${YELLOW} should show help for generate command${RESET_COLOR}"
+    echo ""
     node ./index.js generate -h
 }
 
@@ -48,6 +60,9 @@ npm run cmd:init:empty
 
 reset_and_rebuild
 
+echo ""
+echo "${YELLOW} ENTRY commands${RESET_COLOR}"
+echo ""
 # should create default entries dir and config with -p project name
 npm run cmd:init &&
 # should create an entry prompting user for each input
@@ -57,8 +72,15 @@ npm run cmd:entry &&
 # should create entry using same cli arg values an -f
 npm run cmd:entry:force &&
 
+echo ""
+echo "${GREEN} ENTRY commands: PASSED${RESET_COLOR}"
+echo ""
+
+echo ""
+echo "${YELLOW} GENERATE commands${RESET_COLOR}"
+echo ""
+
 npm run cmd:generate:empty &&
 npm run cmd:generate &&
 
-# run unit tests
 npm run test

@@ -7,6 +7,7 @@ import sortBy from 'lodash.sortby';
 import CliCommandModel from '../../types/cli-arg.model';
 import ConfigModel from '../../types/config.model';
 import EntryModel, { IEntryModel } from '../entry/entry.model';
+import { IKeyString } from '../../types/i-key-string';
 import { readFileAsync } from '../../read-file-async';
 import { textInputValidator } from '../../validator/text-input.validator';
 import { GENERATE_CLI_COMMAND_MAP } from './cli-command-map';
@@ -33,10 +34,8 @@ export default class GenerateCommand {
         console.log('\n\nconfig', config);
         console.log('\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n');
 
-        const entryList: EntryModel[] = await GenerateCommand.buildEntryList(config);
-        const argValues: any = GenerateCommand._extractEntryValuesFromCliArgs(args);
-        console.log('\n---: argValues ', argValues, '\n\n');
-
+        const entryList: EntryModel[] = await GenerateCommand._buildEntryList(config);
+        const argValues: Partial<IChangelog> = GenerateCommand._extractEntryValuesFromCliArgs(args);
         const preparedChangelog = await GenerateCommand._promptChangelogQuestions(argValues, entryList);
 
         console.log('\n---: preparedChangelog ', preparedChangelog, preparedChangelog.entries);
@@ -58,7 +57,7 @@ export default class GenerateCommand {
      * @param configModel
      * @returns {Promise<EntryModel[]>}
      */
-    public static async buildEntryList(configModel: ConfigModel): Promise<EntryModel[]> {
+    private static async _buildEntryList(configModel: ConfigModel): Promise<EntryModel[]> {
         const entriesDir = path.join(process.cwd(), configModel.entriesDir);
         const fileNames = fs.readdirSync(entriesDir);
 
@@ -99,11 +98,11 @@ export default class GenerateCommand {
      * @param {minimist.ParsedArgs} args
      * @returns {object}
      */
-    private static _extractEntryValuesFromCliArgs(args: minimist.ParsedArgs): Partial<EntryModel> {
+    private static _extractEntryValuesFromCliArgs(args: minimist.ParsedArgs): Partial<IChangelog> {
         return Object.keys(GENERATE_CLI_COMMAND_MAP).reduce((
-            sum: {[key: string]: string},
+            sum: IKeyString,
             cliOptionName: string,
-        ): {[key: string]: string} => {
+        ): IKeyString => {
             const cliOption: CliCommandModel = GENERATE_CLI_COMMAND_MAP[cliOptionName];
             const argValue: string = cliOption.extractArgValueByCommandOrAlias(args) as string;
 
@@ -115,11 +114,42 @@ export default class GenerateCommand {
         }, {});
     }
 
+    /**
+     *
+     *
+     *
+     */
+    private static _buildEntryCheckboxChoicesList(sortedEntryGroup: IEntryGroup): string[] {
+        return Object.keys(sortedEntryGroup).reduce((sum: string[], groupName: string): string[] => {
+            const separator: string = `--- ${groupName.toUpperCase()} ---`;
+            const checkboxEntriesForGroup: string[] = sortedEntryGroup[groupName].map(
+                (entryModel: EntryModel): string => entryModel.buildCheckboxLabel()
+            );
 
-    private static async _promptChangelogQuestions(argValues: any, entryList: EntryModel[]): Promise<any> {
+            sum.push(
+                new inquirer.Separator(separator) as any
+            );
+
+            return [
+                ...sum,
+                ...checkboxEntriesForGroup,
+            ];
+        }, [] as string[]);
+    }
+
+    /**
+     *
+     *
+     * @param argValues
+     * @param entryList
+     */
+    private static async _promptChangelogQuestions(
+        argValues: Partial<IChangelog>,
+        entryList: EntryModel[]
+    ): Promise<IChangelog> {
         const versionOrBlank: string = argValues.version || '';
         const sortedEntryGroup: IEntryGroup = GenerateCommand._groupAndSortEntryListByType(entryList);
-        const entryCheckboxList: any = GenerateCommand._buildEntryCheckboxList(sortedEntryGroup);
+        const entryCheckboxList: string[] = GenerateCommand._buildEntryCheckboxChoicesList(sortedEntryGroup);
         const questions: inquirer.Questions = [
             {
                 name: 'version',
@@ -135,7 +165,7 @@ export default class GenerateCommand {
         ];
 
         return inquirer.prompt(questions)
-            .then((answers: inquirer.Answers): any => {
+            .then((answers: inquirer.Answers): IChangelog => {
                 const rawChangelog: Partial<IChangelog> = {
                     date: new Date(),
                     version: answers.version,
@@ -143,30 +173,18 @@ export default class GenerateCommand {
 
                 return GenerateCommand._buildChangelogFromAnswers(
                     rawChangelog,
-                    answers.entries as any[],
+                    answers.entries as string[],
                     entryList,
                     sortedEntryGroup
                 );
             });
     }
 
-    private static _buildEntryCheckboxList(sortedEntryGroup: IEntryGroup): inquirer.Questions {
-        return Object.keys(sortedEntryGroup).reduce((sum: any[], groupName: string): any => {
-            const separator: string = `--- ${groupName.toUpperCase()} ---`;
-            const checkboxEntriesForGroup: string[] = sortedEntryGroup[groupName].map(
-                (entryModel: EntryModel): string => entryModel.buildCheckboxLabel()
-            );
-
-            sum.push(new inquirer.Separator(separator));
-
-            return [
-                ...sum,
-                ...checkboxEntriesForGroup,
-            ];
-        }, [] as any[]);
-    }
-
-
+    /**
+     *
+     *
+     *
+     */
     private static _buildChangelogFromAnswers(
         rawChangelog: Partial<IChangelog>,
         rawEntrySelections: string[],
@@ -187,6 +205,11 @@ export default class GenerateCommand {
         );
     }
 
+    /**
+     *
+     *
+     *
+     */
     private static _updateEntryGroupWithUserSelections(
         rawChangelog: Partial<IChangelog>,
         rawEntrySelections: string[],

@@ -6,6 +6,7 @@ import path from 'path';
 import CliCommandModel from '../../types/cli-arg.model';
 import ConfigModel from '../../types/config.model';
 import EntryModel from './entry.model';
+import { IKeyString } from '../../types/i-key-string';
 import { execWithDefaultAndErrorMsg } from '../../execWithDefaultAndErrorMsg';
 import { textInputValidator } from '../../validator/text-input.validator';
 import { ENTRY_CLI_COMMAND_MAP } from './cli-command-map';
@@ -78,9 +79,9 @@ export default class EntryCommand {
      */
     public static extractEntryValuesFromCliArgs(args: minimist.ParsedArgs): Partial<EntryModel> {
         return Object.keys(ENTRY_CLI_COMMAND_MAP).reduce((
-            sum: {[key: string]: string},
+            sum: IKeyString,
             cliOptionName: string,
-        ): {[key: string]: string} => {
+        ): IKeyString => {
             const cliOption: CliCommandModel = ENTRY_CLI_COMMAND_MAP[cliOptionName];
             const argValue: string = cliOption.extractArgValueByCommandOrAlias(args) as string;
 

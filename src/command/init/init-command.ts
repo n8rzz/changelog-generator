@@ -10,6 +10,7 @@ import {
     writeConfig,
 } from '../../config/config';
 import { IInititialConfig } from './i-initial-config';
+import { IKeyString } from '../../types/i-key-string';
 import { execWithDefaultAndErrorMsg } from '../../execWithDefaultAndErrorMsg';
 import { textInputValidator } from '../../validator/text-input.validator';
 import { defaultConfig } from '../../config/default-config';
@@ -133,7 +134,6 @@ export default class InitCommand {
         });
     }
 
-
     /**
      * Starting from a `defaultConfig`, ask `git` for some additional
      * information and return a new config to be used elsewhere
@@ -212,9 +212,9 @@ export default class InitCommand {
      */
     private static async _extractInitialProps(args: minimist.ParsedArgs): Promise<Partial<ConfigModel>> {
         return Object.keys(INIT_CLI_COMMAND_MAP).reduce((
-            sum: {[key: string]: string},
+            sum: IKeyString,
             cliOptionName: string,
-        ): {[key: string]: string} => {
+        ): IKeyString => {
             const cliOption: CliCommandModel = INIT_CLI_COMMAND_MAP[cliOptionName];
             const argValue: string = cliOption.extractArgValueByCommandOrAlias(args) as string;
 

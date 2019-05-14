@@ -28,7 +28,7 @@ test('CliController.execute() calls GenerateCommand.execute() when generate comm
     const argsMock: minimist.ParsedArgs = {
         _: ['generate'],
     };
-    const executeStub: sinon.SinonSpy = sinon.spy(GenerateCommand, 'execute');
+    const executeStub: sinon.SinonSpy = sinon.stub(GenerateCommand, 'execute').resolves(undefined);
 
     CliController.execute(
         argsMock,
