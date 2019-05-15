@@ -23,7 +23,7 @@ export interface IChangelog {
 }
 
 export default class GenerateCommand {
-   /**
+    /**
      *
      *
      * @param args
@@ -34,9 +34,9 @@ export default class GenerateCommand {
         console.log('\n\nconfig', config);
         console.log('\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n');
 
-        const entryList: EntryModel[] = await GenerateCommand._buildEntryList(config);
-        const argValues: Partial<IChangelog> = GenerateCommand._extractEntryValuesFromCliArgs(args);
-        const preparedChangelog = await GenerateCommand._promptChangelogQuestions(argValues, entryList);
+        const entryList: EntryModel[] = await GenerateCommand.buildEntryList(config);
+        const argValues: Partial<IChangelog> = GenerateCommand.extractEntryValuesFromCliArgs(args);
+        const preparedChangelog = await GenerateCommand.promptChangelogQuestions(argValues, entryList);
 
         console.log('\n---: preparedChangelog ', preparedChangelog, preparedChangelog.entries);
 
@@ -57,7 +57,7 @@ export default class GenerateCommand {
      * @param configModel
      * @returns {Promise<EntryModel[]>}
      */
-    private static async _buildEntryList(configModel: ConfigModel): Promise<EntryModel[]> {
+    public static async buildEntryList(configModel: ConfigModel): Promise<EntryModel[]> {
         const entriesDir = path.join(process.cwd(), configModel.entriesDir);
         const fileNames = fs.readdirSync(entriesDir);
 
@@ -75,21 +75,6 @@ export default class GenerateCommand {
     }
 
     /**
-     *
-     *
-     * @param entryList
-     */
-    private static _groupAndSortEntryListByType(entryList: EntryModel[]): IEntryGroup {
-        const groupedEntrylist: IEntryGroup = groupBy(entryList, 'type');
-
-        return Object.keys(groupedEntrylist).reduce((sum: any, groupKey: string): any => {
-            sum[groupKey] = sortBy(groupedEntrylist[groupKey], ['date']);
-
-            return sum;
-        }, {} as IEntryGroup)
-    }
-
-    /**
      * Pulls values passed from `cliArgs`
      *
      * Will grab a value based on either argument or alias
@@ -98,7 +83,7 @@ export default class GenerateCommand {
      * @param {minimist.ParsedArgs} args
      * @returns {object}
      */
-    private static _extractEntryValuesFromCliArgs(args: minimist.ParsedArgs): Partial<IChangelog> {
+    public static extractEntryValuesFromCliArgs(args: minimist.ParsedArgs): Partial<IChangelog> {
         return Object.keys(GENERATE_CLI_COMMAND_MAP).reduce((
             sum: IKeyString,
             cliOptionName: string,
@@ -114,28 +99,6 @@ export default class GenerateCommand {
         }, {});
     }
 
-    /**
-     *
-     *
-     *
-     */
-    private static _buildEntryCheckboxChoicesList(sortedEntryGroup: IEntryGroup): string[] {
-        return Object.keys(sortedEntryGroup).reduce((sum: string[], groupName: string): string[] => {
-            const separator: string = `--- ${groupName.toUpperCase()} ---`;
-            const checkboxEntriesForGroup: string[] = sortedEntryGroup[groupName].map(
-                (entryModel: EntryModel): string => entryModel.buildCheckboxLabel()
-            );
-
-            sum.push(
-                new inquirer.Separator(separator) as any
-            );
-
-            return [
-                ...sum,
-                ...checkboxEntriesForGroup,
-            ];
-        }, [] as string[]);
-    }
 
     /**
      *
@@ -143,9 +106,9 @@ export default class GenerateCommand {
      * @param argValues
      * @param entryList
      */
-    private static async _promptChangelogQuestions(
+    public static async promptChangelogQuestions(
         argValues: Partial<IChangelog>,
-        entryList: EntryModel[]
+        entryList: EntryModel[],
     ): Promise<IChangelog> {
         const versionOrBlank: string = argValues.version || '';
         const sortedEntryGroup: IEntryGroup = GenerateCommand._groupAndSortEntryListByType(entryList);
@@ -161,7 +124,7 @@ export default class GenerateCommand {
                 name: 'entries',
                 type: 'checkbox',
                 choices: entryCheckboxList,
-            }
+            },
         ];
 
         return inquirer.prompt(questions)
@@ -171,11 +134,11 @@ export default class GenerateCommand {
                     version: answers.version,
                 };
 
-                return GenerateCommand._buildChangelogFromAnswers(
+                return GenerateCommand.buildChangelogFromAnswers(
                     rawChangelog,
                     answers.entries as string[],
                     entryList,
-                    sortedEntryGroup
+                    sortedEntryGroup,
                 );
             });
     }
@@ -185,11 +148,36 @@ export default class GenerateCommand {
      *
      *
      */
-    private static _buildChangelogFromAnswers(
+    private static _buildEntryCheckboxChoicesList(sortedEntryGroup: IEntryGroup): string[] {
+        return Object.keys(sortedEntryGroup).reduce((sum: string[], groupName: string): string[] => {
+            const separator: string = `--- ${groupName.toUpperCase()} ---`;
+            const checkboxEntriesForGroup: string[] = sortedEntryGroup[groupName].map(
+                (entryModel: EntryModel): string => {
+                    return entryModel.buildCheckboxLabel();
+                },
+            );
+
+            sum.push(
+                new inquirer.Separator(separator) as any,
+            );
+
+            return [
+                ...sum,
+                ...checkboxEntriesForGroup,
+            ];
+        }, [] as string[]);
+    }
+
+    /**
+     *
+     *
+     *
+     */
+    public static buildChangelogFromAnswers(
         rawChangelog: Partial<IChangelog>,
         rawEntrySelections: string[],
         entryList: EntryModel[],
-        sortedEntryGroup: IEntryGroup
+        sortedEntryGroup: IEntryGroup,
     ): IChangelog {
         if (rawEntrySelections.length === entryList.length) {
             return {
@@ -208,6 +196,21 @@ export default class GenerateCommand {
     /**
      *
      *
+     * @param entryList
+     */
+    private static _groupAndSortEntryListByType(entryList: EntryModel[]): IEntryGroup {
+        const groupedEntrylist: IEntryGroup = groupBy(entryList, 'type');
+
+        return Object.keys(groupedEntrylist).reduce((sum: any, groupKey: string): any => {
+            sum[groupKey] = sortBy(groupedEntrylist[groupKey], ['date']);
+
+            return sum;
+        }, {} as IEntryGroup);
+    }
+
+    /**
+     *
+     *
      *
      */
     private static _updateEntryGroupWithUserSelections(
@@ -221,7 +224,7 @@ export default class GenerateCommand {
 
         return {
             ...rawChangelog,
-            entries: GenerateCommand._groupAndSortEntryListByType(trimmedEntryList)
+            entries: GenerateCommand._groupAndSortEntryListByType(trimmedEntryList),
         } as IChangelog; // casting here because we receive `Partial<IChangelog>` as a param
     }
 }
