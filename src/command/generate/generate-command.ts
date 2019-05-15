@@ -7,20 +7,12 @@ import sortBy from 'lodash.sortby';
 import CliCommandModel from '../../types/cli-arg.model';
 import ConfigModel from '../../types/config.model';
 import EntryModel, { IEntryModel } from '../entry/entry.model';
+import { IChangelog } from './i-changelog';
+import { IEntryGroup } from './i-entry-group';
 import { IKeyString } from '../../types/i-key-string';
 import { readFileAsync } from '../../read-file-async';
 import { textInputValidator } from '../../validator/text-input.validator';
 import { GENERATE_CLI_COMMAND_MAP } from './cli-command-map';
-
-export interface IEntryGroup {
-    [key: string]: EntryModel[];
-}
-
-export interface IChangelog {
-    version: string;
-    date: Date;
-    entries: IEntryGroup;
-}
 
 export default class GenerateCommand {
     /**
@@ -49,6 +41,31 @@ export default class GenerateCommand {
         // # SUCCESS feedback
 
         return Promise.resolve();
+    }
+
+    /**
+     *
+     *
+     *
+     */
+    public static buildChangelogFromAnswers(
+        rawChangelog: Partial<IChangelog>,
+        rawEntrySelections: string[],
+        entryList: EntryModel[],
+        sortedEntryGroup: IEntryGroup,
+    ): IChangelog {
+        if (rawEntrySelections.length === entryList.length) {
+            return {
+                ...rawChangelog,
+                entries: sortedEntryGroup,
+            } as IChangelog;
+        }
+
+        return GenerateCommand._updateEntryGroupWithUserSelections(
+            rawChangelog,
+            rawEntrySelections,
+            entryList,
+        );
     }
 
     /**
@@ -98,7 +115,6 @@ export default class GenerateCommand {
             return sum;
         }, {});
     }
-
 
     /**
      *
@@ -166,31 +182,6 @@ export default class GenerateCommand {
                 ...checkboxEntriesForGroup,
             ];
         }, [] as string[]);
-    }
-
-    /**
-     *
-     *
-     *
-     */
-    public static buildChangelogFromAnswers(
-        rawChangelog: Partial<IChangelog>,
-        rawEntrySelections: string[],
-        entryList: EntryModel[],
-        sortedEntryGroup: IEntryGroup,
-    ): IChangelog {
-        if (rawEntrySelections.length === entryList.length) {
-            return {
-                ...rawChangelog,
-                entries: sortedEntryGroup,
-            } as IChangelog;
-        }
-
-        return GenerateCommand._updateEntryGroupWithUserSelections(
-            rawChangelog,
-            rawEntrySelections,
-            entryList,
-        );
     }
 
     /**
