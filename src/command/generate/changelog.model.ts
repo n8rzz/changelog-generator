@@ -4,6 +4,11 @@ import EntryModel from '../entry/entry.model';
 import { IChangelog } from './i-changelog';
 import { IEntryGroup } from './i-entry-group';
 
+/**
+ *
+ *
+ * @class ChangelogModel
+ */
 export default class ChangelogModel implements IChangelog {
     public version: string = '';
     public date: Date = new Date();

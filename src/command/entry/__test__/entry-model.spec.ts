@@ -3,7 +3,7 @@ import EntryModel from '../entry.model';
 import {
     minimalEntryModelMock,
     completeEntryModelMock,
-} from './entry-model.mock';
+} from '../../../__mock__/entry-model.mock';
 
 test('EntryModel does not throw when passed valid data', (t) => {
     // eslint-disable-next-line arrow-body-style
