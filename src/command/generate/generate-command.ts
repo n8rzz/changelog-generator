@@ -6,6 +6,7 @@ import path from 'path';
 import sortBy from 'lodash.sortby';
 import CliCommandModel from '../../types/cli-arg.model';
 import ConfigModel from '../../types/config.model';
+import ChangelogModel from './changelog.model';
 import EntryModel, { IEntryModel } from '../entry/entry.model';
 import { IChangelog } from './i-changelog';
 import { IEntryGroup } from './i-entry-group';
@@ -26,11 +27,8 @@ export default class GenerateCommand {
         console.log('\n\nconfig', config);
         console.log('\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n');
 
-        const entryList: EntryModel[] = await GenerateCommand.buildEntryList(config);
-        const argValues: Partial<IChangelog> = GenerateCommand.extractEntryValuesFromCliArgs(args);
-        const preparedChangelog = await GenerateCommand.promptChangelogQuestions(argValues, entryList);
-
-        console.log('\n---: preparedChangelog ', preparedChangelog, preparedChangelog.entries);
+        const preparedChangelog: ChangelogModel = await GenerateCommand._prepareChangelog(args, config);
+        console.log('\n---: preparedChangelog ', preparedChangelog, '\n\n', preparedChangelog.entries);
 
         // # convert json -> md
         // # read existing CHANGELOG
@@ -41,31 +39,6 @@ export default class GenerateCommand {
         // # SUCCESS feedback
 
         return Promise.resolve();
-    }
-
-    /**
-     *
-     *
-     *
-     */
-    public static buildChangelogFromAnswers(
-        rawChangelog: Partial<IChangelog>,
-        rawEntrySelections: string[],
-        entryList: EntryModel[],
-        sortedEntryGroup: IEntryGroup,
-    ): IChangelog {
-        if (rawEntrySelections.length === entryList.length) {
-            return {
-                ...rawChangelog,
-                entries: sortedEntryGroup,
-            } as IChangelog;
-        }
-
-        return GenerateCommand._updateEntryGroupWithUserSelections(
-            rawChangelog,
-            rawEntrySelections,
-            entryList,
-        );
     }
 
     /**
@@ -125,7 +98,7 @@ export default class GenerateCommand {
     public static async promptChangelogQuestions(
         argValues: Partial<IChangelog>,
         entryList: EntryModel[],
-    ): Promise<IChangelog> {
+    ): Promise<ChangelogModel> {
         const versionOrBlank: string = argValues.version || '';
         const sortedEntryGroup: IEntryGroup = GenerateCommand._groupAndSortEntryListByType(entryList);
         const entryCheckboxList: string[] = GenerateCommand._buildEntryCheckboxChoicesList(sortedEntryGroup);
@@ -144,18 +117,21 @@ export default class GenerateCommand {
         ];
 
         return inquirer.prompt(questions)
-            .then((answers: inquirer.Answers): IChangelog => {
-                const rawChangelog: Partial<IChangelog> = {
+            .then((answers: inquirer.Answers): ChangelogModel => {
+                // TODO: move all this to start from ChangelogModel.constructor
+                const changelogModel: ChangelogModel = new ChangelogModel({
                     date: new Date(),
                     version: answers.version,
-                };
+                    entries: {},
+                });
 
-                return GenerateCommand.buildChangelogFromAnswers(
-                    rawChangelog,
+                changelogModel.buildChangelogFromAnswers(
                     answers.entries as string[],
                     entryList,
                     sortedEntryGroup,
                 );
+
+                return changelogModel;
             });
     }
 
@@ -204,18 +180,10 @@ export default class GenerateCommand {
      *
      *
      */
-    private static _updateEntryGroupWithUserSelections(
-        rawChangelog: Partial<IChangelog>,
-        rawEntrySelections: string[],
-        entryList: EntryModel[],
-    ): IChangelog {
-        const trimmedEntryList: EntryModel[] = entryList.filter((entryModel: EntryModel): boolean => {
-            return rawEntrySelections.indexOf(entryModel.buildCheckboxLabel()) !== -1;
-        });
+    private static async _prepareChangelog(args: minimist.ParsedArgs, config: ConfigModel): Promise<ChangelogModel> {
+        const entryList: EntryModel[] = await GenerateCommand.buildEntryList(config);
+        const argValues: Partial<IChangelog> = GenerateCommand.extractEntryValuesFromCliArgs(args);
 
-        return {
-            ...rawChangelog,
-            entries: GenerateCommand._groupAndSortEntryListByType(trimmedEntryList),
-        } as IChangelog; // casting here because we receive `Partial<IChangelog>` as a param
+        return GenerateCommand.promptChangelogQuestions(argValues, entryList);
     }
 }
