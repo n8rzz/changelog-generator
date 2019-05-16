@@ -1,6 +1,7 @@
-import test from "ava";
+/* eslint-disable arrow-body-style */
+import test from 'ava';
 import ChangelogModel from '../changelog.model';
-import { IChangelog } from "../i-changelog";
+import { IChangelog } from '../i-changelog';
 import {
     validChangelogPropsMock,
     validChangelogWithEntriesMock,
@@ -10,18 +11,10 @@ import {
     bugfixEntryModelFixture,
     bugfixEntryModelWithExtendedDescriptionFixture,
 } from '../../../__fixture__/entry-model.fixture';
-import EntryModel from "src/command/entry/entry.model";
+import EntryModel from '../../entry/entry.model';
 import {
-    validEntryGroupFixture
+    validEntryGroupFixture,
 } from '../../../__fixture__/entry-group.fixture';
-
-const entryListMock: EntryModel[] = [
-    featureEntryModelFixture,
-    bugfixEntryModelFixture,
-    bugfixEntryModelWithExtendedDescriptionFixture,
-];
-
-const rawSelectionListMock = entryListMock.map((entryModel: EntryModel): string => entryModel.buildCheckboxLabel());
 
 test('ChangelogModel does not throw when passed valid props', (t) => {
     t.notThrows(() => new ChangelogModel({} as IChangelog));
@@ -29,7 +22,13 @@ test('ChangelogModel does not throw when passed valid props', (t) => {
     t.notThrows(() => new ChangelogModel(validChangelogWithEntriesMock));
 });
 
-test.only('.buildChangelogFromAnswers() returns `sortedEntryGroup` when all entries have been selected', (t) => {
+test('.buildChangelogFromAnswers() returns `sortedEntryGroup` when all entries have been selected', (t) => {
+    const entryListMock: EntryModel[] = [
+        featureEntryModelFixture,
+        bugfixEntryModelFixture,
+        bugfixEntryModelWithExtendedDescriptionFixture,
+    ];
+    const rawSelectionListMock = entryListMock.map((entryModel: EntryModel): string => entryModel.buildCheckboxLabel());
     const cmd: ChangelogModel = new ChangelogModel(validChangelogPropsMock);
 
     cmd.buildChangelogFromAnswers(rawSelectionListMock, entryListMock, validEntryGroupFixture);
@@ -37,4 +36,15 @@ test.only('.buildChangelogFromAnswers() returns `sortedEntryGroup` when all entr
     t.deepEqual(cmd.entries, validEntryGroupFixture);
 });
 
-test.skip('.buildChangelogFromAnswers() returns selected entries when only some have been selected', () => {});
+test('.buildChangelogFromAnswers() returns selected entries when only some have been selected', (t) => {
+    const entryListMock: EntryModel[] = [
+        bugfixEntryModelFixture,
+        bugfixEntryModelWithExtendedDescriptionFixture,
+    ];
+    const rawSelectionListMock = entryListMock.map((entryModel: EntryModel): string => entryModel.buildCheckboxLabel());
+    const cmd: ChangelogModel = new ChangelogModel(validChangelogPropsMock);
+
+    cmd.buildChangelogFromAnswers(rawSelectionListMock, entryListMock, validEntryGroupFixture);
+
+    t.is(cmd.entries.feature, undefined);
+});
