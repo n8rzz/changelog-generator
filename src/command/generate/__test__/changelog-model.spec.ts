@@ -1,11 +1,7 @@
 /* eslint-disable arrow-body-style */
 import test from 'ava';
 import ChangelogModel from '../changelog.model';
-import { IChangelog } from '../i-changelog';
-import {
-    validChangelogPropsMock,
-    validChangelogWithEntriesMock,
-} from '../../../__mock__/changelog-model.mock';
+import { validChangelogAnswersProps } from '../../../__mock__/changelog-model.mock';
 import {
     featureEntryModelFixture,
     bugfixEntryModelFixture,
@@ -16,35 +12,28 @@ import {
     validEntryGroupFixture,
 } from '../../../__fixture__/entry-group.fixture';
 
-test('ChangelogModel does not throw when passed valid props', (t) => {
-    t.notThrows(() => new ChangelogModel({} as IChangelog));
-    t.notThrows(() => new ChangelogModel(validChangelogPropsMock));
-    t.notThrows(() => new ChangelogModel(validChangelogWithEntriesMock));
-});
+let entryListMock: EntryModel[];
+let rawSelectionListMock: string[];
 
-test('.buildChangelogFromAnswers() returns `sortedEntryGroup` when all entries have been selected', (t) => {
-    const entryListMock: EntryModel[] = [
+test.before(() => {
+    entryListMock = [
         featureEntryModelFixture,
         bugfixEntryModelFixture,
         bugfixEntryModelWithExtendedDescriptionFixture,
     ];
-    const rawSelectionListMock = entryListMock.map((entryModel: EntryModel): string => entryModel.buildCheckboxLabel());
-    const cmd: ChangelogModel = new ChangelogModel(validChangelogPropsMock);
-
-    cmd.buildChangelogFromAnswers(rawSelectionListMock, entryListMock, validEntryGroupFixture);
-
-    t.deepEqual(cmd.entries, validEntryGroupFixture);
+    rawSelectionListMock = entryListMock.map((entryModel: EntryModel): string => entryModel.buildCheckboxLabel());
 });
 
-test('.buildChangelogFromAnswers() returns selected entries when only some have been selected', (t) => {
-    const entryListMock: EntryModel[] = [
-        bugfixEntryModelFixture,
-        bugfixEntryModelWithExtendedDescriptionFixture,
-    ];
-    const rawSelectionListMock = entryListMock.map((entryModel: EntryModel): string => entryModel.buildCheckboxLabel());
-    const cmd: ChangelogModel = new ChangelogModel(validChangelogPropsMock);
+test.after(() => {
+    entryListMock = [];
+    rawSelectionListMock = [];
+});
 
-    cmd.buildChangelogFromAnswers(rawSelectionListMock, entryListMock, validEntryGroupFixture);
-
-    t.is(cmd.entries.feature, undefined);
+test('ChangelogModel does not throw when passed valid props', (t) => {
+    const answersWithSelectionlist = {
+        ...validChangelogAnswersProps,
+        entries: rawSelectionListMock,
+    };
+    t.notThrows(() => new ChangelogModel(validChangelogAnswersProps, entryListMock, validEntryGroupFixture));
+    t.notThrows(() => new ChangelogModel(answersWithSelectionlist, entryListMock, validEntryGroupFixture));
 });

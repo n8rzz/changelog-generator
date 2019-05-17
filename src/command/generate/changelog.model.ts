@@ -1,3 +1,4 @@
+import inquirer from 'inquirer';
 import groupBy from 'lodash.groupby';
 import sortBy from 'lodash.sortby';
 import EntryModel from '../entry/entry.model';
@@ -14,10 +15,14 @@ export default class ChangelogModel implements IChangelog {
     public date: Date = new Date();
     public entries: IEntryGroup = {};
 
-    constructor(props: IChangelog) {
+    constructor(props: inquirer.Answers, entryList: EntryModel[], sortedEntryGroup: IEntryGroup) {
         this.version = props.version;
-        this.date = props.date;
-        this.entries = props.entries || {};
+        this.entries = sortedEntryGroup;
+
+        this._buildChangelogFromAnswers(
+            props.entries,
+            entryList,
+        );
     }
 
     /**
@@ -25,13 +30,12 @@ export default class ChangelogModel implements IChangelog {
      *
      *
      */
-    public buildChangelogFromAnswers(
+    private _buildChangelogFromAnswers(
         rawEntrySelections: string[],
         entryList: EntryModel[],
-        sortedEntryGroup: IEntryGroup,
     ): void {
         if (rawEntrySelections.length === entryList.length) {
-            this.entries = sortedEntryGroup;
+            return;
         }
 
         this._updateEntryGroupWithUserSelections(

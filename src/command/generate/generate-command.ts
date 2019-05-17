@@ -118,20 +118,11 @@ export default class GenerateCommand {
 
         return inquirer.prompt(questions)
             .then((answers: inquirer.Answers): ChangelogModel => {
-                // TODO: move all this to start from ChangelogModel.constructor
-                const changelogModel: ChangelogModel = new ChangelogModel({
-                    date: new Date(),
-                    version: answers.version,
-                    entries: {},
-                });
-
-                changelogModel.buildChangelogFromAnswers(
-                    answers.entries as string[],
+                return new ChangelogModel(
+                    answers,
                     entryList,
                     sortedEntryGroup,
                 );
-
-                return changelogModel;
             });
     }
 
