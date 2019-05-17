@@ -8,9 +8,6 @@ import {
     bugfixEntryModelWithExtendedDescriptionFixture,
 } from '../../../__fixture__/entry-model.fixture';
 import EntryModel from '../../entry/entry.model';
-import {
-    validEntryGroupFixture,
-} from '../../../__fixture__/entry-group.fixture';
 
 let entryListMock: EntryModel[];
 let rawSelectionListMock: string[];
@@ -34,6 +31,6 @@ test('ChangelogModel does not throw when passed valid props', (t) => {
         ...validChangelogAnswersProps,
         entries: rawSelectionListMock,
     };
-    t.notThrows(() => new ChangelogModel(validChangelogAnswersProps, entryListMock, validEntryGroupFixture));
-    t.notThrows(() => new ChangelogModel(answersWithSelectionlist, entryListMock, validEntryGroupFixture));
+    t.notThrows(() => new ChangelogModel(validChangelogAnswersProps, entryListMock));
+    t.notThrows(() => new ChangelogModel(answersWithSelectionlist, entryListMock));
 });

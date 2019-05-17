@@ -4,29 +4,12 @@ import sinon from 'sinon';
 import minimist from 'minimist';
 import GenerateCommand from '../generate-command';
 import { IChangelog } from '../i-changelog';
-import { configModelFixture } from '../../../__fixture__/config-model.fixture';
 import { entryModelFixture } from '../../../__fixture__/entry-model.fixture';
 
 const answersMock: inquirer.Answers = {
     version: '3.2.1-0',
     entries: [],
 };
-
-test('GenerateCommand.execute() calls .buildEntryList()', (t) => {
-    const argsMock: minimist.ParsedArgs = {
-        _: ['generate'],
-    };
-    const buildEntryListStub: sinon.SinonStub = sinon.stub(GenerateCommand, 'buildEntryList');
-
-    GenerateCommand.execute(
-        argsMock,
-        configModelFixture,
-    );
-
-    t.is(buildEntryListStub.calledWithExactly(configModelFixture), true);
-
-    buildEntryListStub.restore();
-});
 
 test('.extractEntryValuesFromCliArgs() returns values for only the commands/aliases it needs', (t) => {
     const argsMock: minimist.ParsedArgs = {
@@ -78,16 +61,3 @@ test.serial('.promtChangelogQuestions() uses empty string as version default whe
 
     promptStub.restore();
 });
-
-// test.skip('.promtChangelogQuestions() calls .buildChangelogFromAnswers() with correct args', async (t) => {
-//     const argValuesMock: Partial<IChangelog> = {};
-//     const promptStub: sinon.SinonStub = sinon.stub(inquirer, 'prompt').resolves(answersMock);
-//     const buildChangelogFromAnswersStub: sinon.SinonStub = sinon.stub(GenerateCommand, 'buildChangelogFromAnswers');
-
-//     await GenerateCommand.promptChangelogQuestions(argValuesMock, [entryModelFixture]);
-
-//     t.is(buildChangelogFromAnswersStub.calledOnce, true);
-
-//     promptStub.restore();
-//     buildChangelogFromAnswersStub.restore();
-// });

@@ -11,6 +11,6 @@ export const validEntryGroupFixture: IEntryGroup = {
         bugfixEntryModelWithExtendedDescriptionFixture,
     ],
     feature: [
-        featureEntryModelFixture
+        featureEntryModelFixture,
     ],
 };

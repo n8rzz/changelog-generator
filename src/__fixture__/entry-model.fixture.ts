@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import EntryModel from '../command/entry/entry.model';
 import { completeEntryModelMock } from '../__mock__/entry-model.mock';
 

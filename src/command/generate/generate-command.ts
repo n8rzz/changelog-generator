@@ -15,12 +15,31 @@ import { readFileAsync } from '../../read-file-async';
 import { textInputValidator } from '../../validator/text-input.validator';
 import { GENERATE_CLI_COMMAND_MAP } from './cli-command-map';
 
+/**
+ * Used to compile existing entries and write a new
+ * (or add to existing) changelog file
+ *
+ * - grab each entry in `.changelog` dir
+ * - present user with questions about file to write
+ * - write file with entry, grouped by `entry.type`
+ * - remove entry files used to generate file
+ *
+ * @class GenerateCommand
+ */
 export default class GenerateCommand {
     /**
+     * Entry point for `generate` command
      *
+     * Should only be called when `generate` command has been
+     * passed via cli
      *
-     * @param args
-     * @param config
+     * @public
+     * @static
+     * @async
+     * @method execute
+     * @param args {minimist.ParsedArgs}
+     * @param config {ConfigModel}
+     * @returns {Promise<void>}
      */
     public static async execute(args: minimist.ParsedArgs, config: ConfigModel): Promise<void> {
         console.log('args', args);
@@ -42,36 +61,15 @@ export default class GenerateCommand {
     }
 
     /**
-     *
-     *
-     * @param configModel
-     * @returns {Promise<EntryModel[]>}
-     */
-    public static async buildEntryList(configModel: ConfigModel): Promise<EntryModel[]> {
-        const entriesDir = path.join(process.cwd(), configModel.entriesDir);
-        const fileNames = fs.readdirSync(entriesDir);
-
-        return Promise.all(fileNames.map(async (fileName: string): Promise<EntryModel> => {
-            const fielNameWithoutExtension = fileName.split('.json')[0];
-            const rawEntry: string = await readFileAsync(path.join(entriesDir, fileName));
-            // `rawEntry` is going to be a Buffer, using `JSON.parse()` to translate to an object
-            const entryModelProps: IEntryModel = {
-                ...JSON.parse(rawEntry),
-                name: fielNameWithoutExtension,
-            };
-
-            return new EntryModel(entryModelProps);
-        }));
-    }
-
-    /**
      * Pulls values passed from `cliArgs`
      *
      * Will grab a value based on either argument or alias
      *
+     * @public
+     * @static
      * @method extractEntryValuesFromCliArgs
-     * @param {minimist.ParsedArgs} args
-     * @returns {object}
+     * @param args {minimist.ParsedArgs}
+     * @returns Partial<IChangelog>
      */
     public static extractEntryValuesFromCliArgs(args: minimist.ParsedArgs): Partial<IChangelog> {
         return Object.keys(GENERATE_CLI_COMMAND_MAP).reduce((
@@ -90,18 +88,23 @@ export default class GenerateCommand {
     }
 
     /**
+     * Presents user with `inquirer` questions about changelog
+     * to be created, and entries to be included
      *
-     *
-     * @param argValues
-     * @param entryList
+     * @public
+     * @static
+     * @async
+     * @method promptChangelogQuestions
+     * @param argValues {Partial<IChangelog>}
+     * @param entryList {EntryModel[]}
+     * @returns Promise<ChangelogModel>
      */
     public static async promptChangelogQuestions(
         argValues: Partial<IChangelog>,
         entryList: EntryModel[],
     ): Promise<ChangelogModel> {
         const versionOrBlank: string = argValues.version || '';
-        const sortedEntryGroup: IEntryGroup = GenerateCommand._groupAndSortEntryListByType(entryList);
-        const entryCheckboxList: string[] = GenerateCommand._buildEntryCheckboxChoicesList(sortedEntryGroup);
+        const entryCheckboxList: string[] = GenerateCommand._buildEntryCheckboxChoicesList(entryList);
         const questions: inquirer.Questions = [
             {
                 name: 'version',
@@ -121,17 +124,23 @@ export default class GenerateCommand {
                 return new ChangelogModel(
                     answers,
                     entryList,
-                    sortedEntryGroup,
                 );
             });
     }
 
     /**
+     * Builds a list of checkboxes for use with `inquirer` with
+     * entries grouped by `#type`
      *
-     *
-     *
+     * @private
+     * @static
+     * @method _buildEntryCheckboxChoicesList
+     * @param entryList {EntryModel[]}
+     * @returns {string[]}
      */
-    private static _buildEntryCheckboxChoicesList(sortedEntryGroup: IEntryGroup): string[] {
+    private static _buildEntryCheckboxChoicesList(entryList: EntryModel[]): string[] {
+        const sortedEntryGroup: IEntryGroup = GenerateCommand._groupAndSortEntryListByType(entryList);
+
         return Object.keys(sortedEntryGroup).reduce((sum: string[], groupName: string): string[] => {
             const separator: string = `--- ${groupName.toUpperCase()} ---`;
             const checkboxEntriesForGroup: string[] = sortedEntryGroup[groupName].map(
@@ -152,14 +161,41 @@ export default class GenerateCommand {
     }
 
     /**
-     *
-     *
-     * @param entryList
+     * @private
+     * @static
+     * @async
+     * @method _buildEntryList
+     * @param configModel {ConfigModel}
+     * @returns {Promise<EntryModel[]>}
+     */
+    private static async _buildEntryList(configModel: ConfigModel): Promise<EntryModel[]> {
+        const entriesDir = path.join(process.cwd(), configModel.entriesDir);
+        const fileNames = fs.readdirSync(entriesDir);
+
+        return Promise.all(fileNames.map(async (fileName: string): Promise<EntryModel> => {
+            const fielNameWithoutExtension = fileName.split('.json')[0];
+            const rawEntry: string = await readFileAsync(path.join(entriesDir, fileName));
+            // `rawEntry` is going to be a Buffer, using `JSON.parse()` to translate to an object
+            const entryModelProps: IEntryModel = {
+                ...JSON.parse(rawEntry),
+                name: fielNameWithoutExtension,
+            };
+
+            return new EntryModel(entryModelProps);
+        }));
+    }
+
+    /**
+     * @private
+     * @static
+     * @method _groupAndSortEntryListByType
+     * @param entryList {EntryModel[]}
+     * @returns {IEntryGroup}
      */
     private static _groupAndSortEntryListByType(entryList: EntryModel[]): IEntryGroup {
         const groupedEntrylist: IEntryGroup = groupBy(entryList, 'type');
 
-        return Object.keys(groupedEntrylist).reduce((sum: any, groupKey: string): any => {
+        return Object.keys(groupedEntrylist).reduce((sum: IEntryGroup, groupKey: string): IEntryGroup => {
             sum[groupKey] = sortBy(groupedEntrylist[groupKey], ['date']);
 
             return sum;
@@ -167,13 +203,20 @@ export default class GenerateCommand {
     }
 
     /**
+     * Assembles `cli` arg values and `EntryModel`s before
+     * prompting user with `inquirer` questions
      *
-     *
-     *
+     * @private
+     * @static
+     * @async
+     * @method _prepareChangelog
+     * @param args {minimist.ParsedArgs}
+     * @param config {ConfigModel}
+     * @returns {Promise<ChangelogModel>}
      */
     private static async _prepareChangelog(args: minimist.ParsedArgs, config: ConfigModel): Promise<ChangelogModel> {
-        const entryList: EntryModel[] = await GenerateCommand.buildEntryList(config);
         const argValues: Partial<IChangelog> = GenerateCommand.extractEntryValuesFromCliArgs(args);
+        const entryList: EntryModel[] = await GenerateCommand._buildEntryList(config);
 
         return GenerateCommand.promptChangelogQuestions(argValues, entryList);
     }
