@@ -50,6 +50,11 @@ export default class ChangelogModel implements IChangelog {
         );
     }
 
+
+    public toJson(): string {
+        return JSON.stringify(this.entries, null, 4);
+    }
+
     /**
      * Accepts user answers from `inquirer` and builds out list of
      * `EntryModel`s to be included in the changelog file

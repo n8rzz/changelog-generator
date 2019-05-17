@@ -4,15 +4,16 @@ import inquirer from 'inquirer';
 import minimist from 'minimist';
 import path from 'path';
 import sortBy from 'lodash.sortby';
+import ChangelogModel from './changelog.model';
 import CliCommandModel from '../../types/cli-arg.model';
 import ConfigModel from '../../types/config.model';
-import ChangelogModel from './changelog.model';
 import EntryModel, { IEntryModel } from '../entry/entry.model';
 import { IChangelog } from './i-changelog';
 import { IEntryGroup } from './i-entry-group';
 import { IKeyString } from '../../types/i-key-string';
 import { readFileAsync } from '../../read-file-async';
 import { textInputValidator } from '../../validator/text-input.validator';
+import { writeFileAsync } from '../../write-file-async';
 import { GENERATE_CLI_COMMAND_MAP } from './cli-command-map';
 
 /**
@@ -43,11 +44,14 @@ export default class GenerateCommand {
      */
     public static async execute(args: minimist.ParsedArgs, config: ConfigModel): Promise<void> {
         console.log('args', args);
-        console.log('\n\nconfig', config);
+        // console.log('\n\nconfig', config);
         console.log('\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n');
 
-        const preparedChangelog: ChangelogModel = await GenerateCommand._prepareChangelog(args, config);
-        console.log('\n---: preparedChangelog ', preparedChangelog, '\n\n', preparedChangelog.entries);
+        const changelogModel: ChangelogModel = await GenerateCommand._prepareChangelog(args, config);
+        console.log('\n---: changelogModel ', changelogModel);
+
+        const existingChangelog: string = await GenerateCommand._readExistingChangelog(config);
+        console.log('\n---$ ', existingChangelog);
 
         // # convert json -> md
         // # read existing CHANGELOG
@@ -219,5 +223,29 @@ export default class GenerateCommand {
         const entryList: EntryModel[] = await GenerateCommand._buildEntryList(config);
 
         return GenerateCommand.promptChangelogQuestions(argValues, entryList);
+    }
+
+
+    private static async _readExistingChangelog(config: ConfigModel): Promise<string> {
+        console.log('---: config', config);
+        const pathToChangelogFile: string = path.join(process.cwd(), `${config.outputFilename}.md`);
+        let changelog: string = '';
+
+        try {
+            changelog = await readFileAsync(pathToChangelogFile, 'utf-8');
+        } catch (error) {
+            if (error.code !== 'ENOENT') {
+                return Promise.reject(error);
+            }
+
+            await GenerateCommand._createEmptyChangelogFile(pathToChangelogFile);
+        }
+
+        return Promise.resolve(changelog);
+    }
+
+
+    private static async _createEmptyChangelogFile(pathToChangelogFile: string): Promise<void> {
+        writeFileAsync(pathToChangelogFile, '', 'utf-8');
     }
 }
